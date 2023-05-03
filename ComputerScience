@@ -1,6 +1,11 @@
 import tkinter as tk
 import random as rd
 
-var = "test"
+root = tk.Tk()
+root.title("Julie's Party Hire Store Details")
+root.geometry("1920x1280")
 
-label = tk.Label(text = "testing")
+title = tk.Label (root, text = "Julie's Party Hire Store", font = 50)
+title.pack()
+
+root.mainloop()
