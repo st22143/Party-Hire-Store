@@ -1,6 +1,16 @@
 import tkinter as tk
 import random as rd
 
+details = []
+
+def add_to_table(event):
+    print("Added to table")
+    details.insert(0, name_box.get())
+    print(details)
+
+
+
+
 root = tk.Tk()
 root.title("Julie's Party Hire Store Details")
 root.geometry("1920x1280")
@@ -16,6 +26,10 @@ name.place(x=30, y=150)
 name_box = tk.Entry(root, width=50)
 name_box.pack()
 name_box.place(x=150,y=150)
+
+submit = tk.Button(root)
+submit.bind("<ButtonPress>", add_to_table)
+submit.pack()
 
 receipt_number = rd.randint(1,500)
 print(receipt_number)
