@@ -5,7 +5,12 @@ root = tk.Tk()
 root.title("Julie's Party Hire Store Details")
 root.geometry("1920x1280")
 
-title = tk.Label (root, text = "Julie's Party Hire Store", font = 50)
+title = tk.Label(root, text = "Julie's Party Hire Store", font = 50)
 title.pack()
+
+name = tk.Label(root, text = "Full Name: ")
+name.pack()
+
+item = tk.Label(root)
 
 root.mainloop()
