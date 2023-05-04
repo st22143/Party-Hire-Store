@@ -4,24 +4,23 @@ import random as rd
 
 #Predefined list 
 #Will add saving system with JSON soon
-row_number = 1
+row_number = 0
 details = []
 
 #Function for submitting details to the table.
 def add_to_table(event):
-
+    global row_number
     #Random number generator
     receipt_number = rd.randint(1,500)
 
-    details = [row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()]
-    table.insert(parent='', index = row_number + 1, values=details)
-    
-    
+    details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
+    #details = [row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()]
+    table.insert(parent='', index = row_number, values=details[row_number])
+    row_number+=1
 
+#def remove_column():
 
-
-
-
+#def add_to_column():  
 
 #Tkinter
 root = tk.Tk()
@@ -38,7 +37,7 @@ name.place(x=30, y=150)
 
 name_box = tk.Entry(root, width=50)
 name_box.pack()
-name_box.place(x=125,y=150)
+name_box.place(x=150,y=150)
 
 number_of_items = tk.Label(root, text = "Number Of Items: ", font=25)
 number_of_items.pack()
@@ -46,7 +45,7 @@ number_of_items.place(x=30, y=250)
 
 number_of_items_box = tk.Entry(root, width=50)
 number_of_items_box.pack()
-number_of_items_box.place(x=165,y=250)
+number_of_items_box.place(x=200,y=250)
 
 items_text = tk.Label(root, text = "Item: ", font = 50)
 items_text.pack()
@@ -55,7 +54,7 @@ items_text.place(x=30, y=350)
 
 items = ttk.Combobox(root, values = "I")                                 
 items.pack()
-items.place(x=75, y=350)
+items.place(x=100, y=350)
 
 
 submit = tk.Button(root, text = "Submit")
@@ -73,7 +72,7 @@ table.heading('Item', text = "Item")
 table.heading('Number Of Items', text = "Number Of Items")
 
 table.pack()
-table.place(x=800, y=100)
+table.place(x=500, y=100)
 
 
 
