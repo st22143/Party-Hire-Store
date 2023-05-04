@@ -58,12 +58,14 @@ submit.place(x=300, y=500)
 
 
 table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"])
-table.column('#0', width=0, stretch=False)
+table.column('#0', width=0, stretch=False) #Gets rid of invisible column
 table.heading('ID', text = "ID")
 table.heading('Name', text = "Full Name")
 table.heading('Receipt Number', text = "Receipt Number")
 table.heading('Item', text = "Item")
 table.heading('Number Of Items', text = "Number Of Items")
+table.insert(parent='', index = 0, values=("Test","Test","Test","Test","Test" ))
+table.insert(parent='', index = 0, values=("Test","Test","Test","Test","Test" ))
 table.pack()
 table.place(x=800, y=100)
 
