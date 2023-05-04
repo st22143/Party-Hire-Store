@@ -4,13 +4,20 @@ import random as rd
 
 #Predefined list 
 #Will add saving system with JSON soon
+row_number = 1
 details = []
 
 #Function for submitting details to the table.
 def add_to_table(event):
-    print("Added to table")
-    details.insert(0, name_box.get())
-    print(details)
+
+    #Random number generator
+    receipt_number = rd.randint(1,500)
+
+    details = [row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()]
+    table.insert(parent='', index = row_number + 1, values=details)
+    
+    
+
 
 
 
@@ -64,15 +71,12 @@ table.heading('Name', text = "Full Name")
 table.heading('Receipt Number', text = "Receipt Number")
 table.heading('Item', text = "Item")
 table.heading('Number Of Items', text = "Number Of Items")
-table.insert(parent='', index = 0, values=("Test","Test","Test","Test","Test" ))
-table.insert(parent='', index = 0, values=("Test","Test","Test","Test","Test" ))
+
 table.pack()
 table.place(x=800, y=100)
 
 
-#Random number generator
-receipt_number = rd.randint(1,500)
-print(receipt_number)
+
 
 
 
