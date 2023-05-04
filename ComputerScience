@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import random as rd
 
 #Predefined list
@@ -9,6 +10,8 @@ def add_to_table(event):
     print("Added to table")
     details.insert(0, name_box.get())
     print(details)
+
+
 
 
 
@@ -37,11 +40,20 @@ number_of_items_box = tk.Entry(root, width=50)
 number_of_items_box.pack()
 number_of_items_box.place(x=165,y=250)
 
+items_text = tk.Label(root, text = "Item: ", font = 50)
+items_text.pack()
+items_text.place(x=30, y=350)
+
+
+items = ttk.Combobox(root, values = "I")                                 
+items.pack()
+items.place(x=75, y=350)
+
 
 submit = tk.Button(root, text = "Submit")
 submit.bind("<ButtonPress>", add_to_table)
 submit.pack()
-submit.place(x=1000, y=500)
+submit.place(x=300, y=500)
 
 #Random number generator
 receipt_number = rd.randint(1,500)
