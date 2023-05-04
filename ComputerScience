@@ -25,11 +25,21 @@ name.place(x=30, y=150)
 
 name_box = tk.Entry(root, width=50)
 name_box.pack()
-name_box.place(x=150,y=150)
+name_box.place(x=125,y=150)
 
-submit = tk.Button(root)
+number_of_items = tk.Label(root, text = "Number Of Items: ", font=25)
+number_of_items.pack()
+number_of_items.place(x=30, y=250)
+
+number_of_items_box = tk.Entry(root, width=50)
+number_of_items_box.pack()
+number_of_items_box.place(x=165,y=250)
+
+
+submit = tk.Button(root, text = "Submit")
 submit.bind("<ButtonPress>", add_to_table)
 submit.pack()
+submit.place(x=1000, y=500)
 
 receipt_number = rd.randint(1,500)
 print(receipt_number)
