@@ -63,8 +63,13 @@ submit.pack()
 submit.place(x=300, y=500)
 
 
-table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"])
+table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=20)
 table.column('#0', width=0, stretch=False) #Gets rid of invisible column
+table.column('#01', width=50)
+table.column('#2', width=150)
+table.column('#03', width=150)
+table.column('#04', width=150)
+table.column('#05', width=150)
 table.heading('ID', text = "ID")
 table.heading('Name', text = "Full Name")
 table.heading('Receipt Number', text = "Receipt Number")
@@ -72,11 +77,10 @@ table.heading('Item', text = "Item")
 table.heading('Number Of Items', text = "Number Of Items")
 
 table.pack()
-table.place(x=500, y=100)
+table.place(x=600,y=100)
 
 
-
-
+table_scrollbar = ttk.Scrollbar(root, orient ="vertical", command = table.yview)
 
 
 root.mainloop()
