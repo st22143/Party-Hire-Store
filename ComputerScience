@@ -3,7 +3,7 @@ from tkinter import ttk
 import random as rd
 
 #Predefined list 
-#Will add saving system with JSON soon
+#Will add saving system using JSON soon
 row_number = 0
 details = []
 
@@ -18,7 +18,8 @@ def add_to_table(event):
     table.insert(parent='', index = row_number, values=details[row_number])
     row_number+=1
 
-#def remove_column():
+def remove_column():
+    table.
 
 #def add_to_column():  
 
@@ -51,8 +52,18 @@ items_text = tk.Label(root, text = "Item: ", font = 50)
 items_text.pack()
 items_text.place(x=30, y=350)
 
+remove_row = tk.Label(root, text = "Remove Row: ", font = 50)
+remove_row.pack()
 
-items = ttk.Combobox(root, values = "I")                                 
+remove_row_box = tk.Entry(root)
+remove_row_box.pack()
+
+remove_button = tk.Button(root, text = "Remove", font = 50)
+remove_button.bind("<ButtonPress>", remove_column)
+remove_button.pack()
+
+
+items = ttk.Combobox(root, values = "test")                                 
 items.pack()
 items.place(x=100, y=350)
 
@@ -63,10 +74,12 @@ submit.pack()
 submit.place(x=300, y=500)
 
 
+
+#Tkinter table/treeview
 table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=20)
 table.column('#0', width=0, stretch=False) #Gets rid of invisible column
 table.column('#01', width=50)
-table.column('#2', width=150)
+table.column('#02', width=150)
 table.column('#03', width=150)
 table.column('#04', width=150)
 table.column('#05', width=150)
@@ -79,8 +92,8 @@ table.heading('Number Of Items', text = "Number Of Items")
 table.pack()
 table.place(x=600,y=100)
 
-
+#Tkinter scrollbar
 table_scrollbar = ttk.Scrollbar(root, orient ="vertical", command = table.yview)
-
+table_scrollbar.pack(side="right")
 
 root.mainloop()
