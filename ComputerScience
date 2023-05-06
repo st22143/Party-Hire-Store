@@ -7,10 +7,13 @@ import random as rd
 row_number = 0
 details = []
 
+
+
 #Function for submitting details to the table.
 def add_to_table(event):
 
     global row_number
+    
     #Random number generator
     receipt_number = rd.randint(1,500)
 
@@ -19,11 +22,15 @@ def add_to_table(event):
     table.insert(parent='', index = row_number, values=details[row_number])
     row_number+=1
 
+
 def remove_column(event):
+
+    global row_number
 
     selected_item = table.selection()[0] #Selected row
 
-    selected_details = table.item(selected_item) #Storing selected row's details
+    selected_details = table.item(selected_item) #Storing selected item's details including row values
+    
 
     deleted_list = details[selected_details.get('values')[0]] #Getting a reference to the selected row from within the detail's list
 
@@ -38,8 +45,24 @@ def remove_column(event):
 
     #Will add the new list here later
 
-    print("Final Details: " + str(details))
+    table_row_values = table.get_children() #Getting all ID values
 
+    row_placeholder = 0 
+    for i in table_row_values: #For loop for updating the table with new list
+        table.item(i, values=details[row_placeholder])
+        row_placeholder+=1
+
+    row_number -= 1
+
+
+
+
+   
+
+#def edit(event):
+   # Get selected item to Edit
+#   selected_item = table.selection()[0]
+#   table.item(selected_item, values=[name_box.get()])
 
 
 #Tkinter
@@ -81,6 +104,9 @@ remove_button = tk.Button(root, text = "Remove", font = 50)
 remove_button.bind("<ButtonPress>", remove_column)
 remove_button.pack()
 
+#edit_button = tk.Button(root, text = "Edit", font = 50)
+#edit_button.bind("<ButtonPress>", edit)
+#edit_button.pack()
 
 items = ttk.Combobox(root, values = "test")                                 
 items.pack()
