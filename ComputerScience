@@ -1,11 +1,31 @@
 import tkinter as tk
 from tkinter import ttk
 import random as rd
+import json
 
 #Predefined list 
 #Will add saving system using JSON soon
 row_number = 0
 details = []
+
+def load_details():
+    global row_number
+    global details
+
+    with open('mydata.json', 'r') as json_file:
+        details = json.loads(json_file.read())
+        
+    
+    for i in details:
+        table.insert(parent='', index = row_number, values=i)
+        row_number += 1
+
+
+def save_details(event):
+    saved_details = json.dumps(details)
+    with open('mydata.json', 'w') as json_file:
+        json_file.write(saved_details)
+        print("Saved")
 
 
 
@@ -13,12 +33,13 @@ details = []
 def add_to_table(event):
 
     global row_number
+    global details
     
     #Random number generator
     receipt_number = rd.randint(1,500)
 
     details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
-    #details = [row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()]
+
     table.insert(parent='', index = row_number, values=details[row_number])
     row_number+=1
 
@@ -26,6 +47,7 @@ def add_to_table(event):
 def remove_column(event):
 
     global row_number
+    global details
 
     selected_item = table.selection()[0] #Selected row
 
@@ -94,15 +116,10 @@ items_text = tk.Label(root, text = "Item: ", font = 50)
 items_text.pack()
 items_text.place(x=30, y=350)
 
-remove_row = tk.Label(root, text = "Remove Row: ", font = 50)
-remove_row.pack()
-
-remove_row_box = tk.Entry(root)
-remove_row_box.pack()
-
 remove_button = tk.Button(root, text = "Remove", font = 50)
 remove_button.bind("<ButtonPress>", remove_column)
 remove_button.pack()
+remove_button.place(x=600,y=525)
 
 #edit_button = tk.Button(root, text = "Edit", font = 50)
 #edit_button.bind("<ButtonPress>", edit)
@@ -113,10 +130,15 @@ items.pack()
 items.place(x=100, y=350)
 
 
-submit = tk.Button(root, text = "Submit")
+submit = tk.Button(root, text = "Submit", font = 50)
 submit.bind("<ButtonPress>", add_to_table)
 submit.pack()
 submit.place(x=300, y=500)
+
+save = tk.Button(root, text = "Save", font = 50)
+save.bind("<ButtonPress>", save_details)
+save.pack()
+save.place(x = 700, y = 525)
 
 
 
@@ -140,5 +162,7 @@ table.place(x=600,y=100)
 #Tkinter scrollbar
 table_scrollbar = ttk.Scrollbar(root, orient ="vertical", command = table.yview)
 table_scrollbar.pack(side="right")
+
+load_details()
 
 root.mainloop()
