@@ -95,11 +95,13 @@ def clear_table(event):
 
 def edit_row(event):
    
-   selected_item = table.selection()[0]
-   selected_details = table.item(selected_item)
-   row = details[selected_details.get('values')[0]]
+    selected_item = table.selection()[0]
+    selected_details = table.item(selected_item)
+    row = details[selected_details.get('values')[0]]
 
-   table.item(selected_item, values=[row[0], name_box.get(), row[2], items.get(), number_of_items_box.get()])
+    details[row[0]] = [row[0], name_box.get(), row[2], items.get(), number_of_items_box.get()]
+
+    table.item(selected_item, values=details[row[0]])
 
 
 #Tkinter
