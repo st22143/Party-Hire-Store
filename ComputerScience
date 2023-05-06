@@ -9,7 +9,7 @@ row_number = 0
 details = []
 
 def load_details():
-    
+
     global row_number
     global details
 
@@ -79,14 +79,27 @@ def remove_column(event):
     row_number -= 1
 
 
+def clear_table(event):
+    
+    global row_number
+    global details
 
+    details = []
+    row_number = 0 
 
+    table_row_values = table.get_children() #Getting all ID values
+
+    for i in table_row_values:
+        table.delete(i)
    
 
-#def edit(event):
-   # Get selected item to Edit
-#   selected_item = table.selection()[0]
-#   table.item(selected_item, values=[name_box.get()])
+def edit_row(event):
+   
+   selected_item = table.selection()[0]
+   selected_details = table.item(selected_item)
+   row = details[selected_details.get('values')[0]]
+
+   table.item(selected_item, values=[row[0], name_box.get(), row[2], items.get(), number_of_items_box.get()])
 
 
 #Tkinter
@@ -141,6 +154,16 @@ save = tk.Button(root, text = "Save", font = 50)
 save.bind("<ButtonPress>", save_details)
 save.pack()
 save.place(x = 700, y = 525)
+
+clear = tk.Button(root, text = "Clear", font = 50)
+clear.bind("<ButtonPress>", clear_table)
+clear.pack()
+clear.place(x = 800, y = 525)
+
+edit = tk.Button(root, text = "Edit", font = 50)
+edit.bind("<ButtonPress>", edit_row)
+edit.pack()
+edit.place(x=900, y= 525)
 
 
 
