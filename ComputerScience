@@ -9,16 +9,18 @@ row_number = 0
 details = []
 
 def load_details():
+    
     global row_number
     global details
 
     with open('mydata.json', 'r') as json_file:
+
         details = json.loads(json_file.read())
         
     
-    for i in details:
-        table.insert(parent='', index = row_number, values=i)
-        row_number += 1
+        for i in details:
+            table.insert(parent='', index = row_number, values=i)
+            row_number += 1
 
 
 def save_details(event):
