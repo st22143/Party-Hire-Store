@@ -21,35 +21,15 @@ def add_to_table(event):
     #Random number generator
     receipt_number = rd.randint(1,500)
 
-    details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
-    
-    table.insert(parent='', index = row_number, values=details[row_number])
-    row_number+=1
-    #print(table.get_children())
-
-
-def remove_column(event):
+    details = [row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()]
+    table.insert(parent='', index = row_number + 1, values=details)
     
     
-    selected_item = table.selection()[0] #Selected row
-    
-    selected_details = table.item(selected_item) #Storing selected row's details
 
-    deleted_list = details[selected_details.get('values')[0]] #Getting a reference to the selected row from within the detail's list
 
-    del details[selected_details.get('values')[0]] #Deleting row from the list
 
-    #Changing the IDs
-    for i in details:
-        if int(i[0]) > int(deleted_list[0]):
-            i[0] -= 1
 
-    table.delete(selected_item) #Deleting row from treeview
 
-    #Will add the new list here later
-
-    print("Final Details: " + str(details)) 
-    
 
 #def add_to_column():  
 
