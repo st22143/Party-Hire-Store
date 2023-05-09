@@ -7,7 +7,7 @@ import json
 #Will add saving system using JSON soon
 row_number = 0
 details = []
-placeholder = False
+
 
 
 def load_details():
@@ -32,47 +32,54 @@ def save_details(event):
         print("Saved")
 
 
+def pop_up(text):
+    pop_up = tk.Toplevel(root)
+    pop_up.geometry("300x25")
+    pop_up.title("Error")
+    tk.Label(pop_up, text = str(text)).pack()
+
+
+
 
 #Function for submitting details to the table.
 def add_to_table(event):
 
     global row_number
     global details
-    
-    print(placeholder)
 
-    if placeholder == False:
-        error = tk.Label(root, text = "Only insert letters")
-    
-    def unvalid():
-        
-        if placeholder == False:
-            error.pack()
-            error.place(x=150, y=175)
-            placeholder = True
-
-
-    def valid():
-            
-        error.destroy()
-        placeholder = False
-
+    name = False
+    item = False
         
     #Random number generator
     receipt_number = rd.randint(1,500)
 
     if number_checker(name_box.get()):
-        unvalid()
-        print("Unvalid")
+        pop_up("The full name must only have letters")
 
     else:
+
+        name = True
+
+    if number_checker(number_of_items_box.get()):
+
+        item = True
+    
+    else:
+        if len(number_of_items_box.get()) == 0:
+            item = True
+
+        else:
+            pop_up("The number of items must only have numbers")
+        
+
+    if name == True and item == True:  
         print("Valid")
         details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
 
         table.insert(parent='', index = row_number, values=details[row_number])
         row_number+=1
 
-        valid()
+    
 
 
 
