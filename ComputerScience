@@ -82,15 +82,15 @@ def add_to_table(event):
     
 
 
-
+#Checks each individual character to see if there's a number
 def number_checker(number):
     for i in number:
         if i.isnumeric():
             return True
     
 
-
-def remove_column(event):
+#Removes a row
+def remove_row(event):
 
     global row_number
     global details
@@ -124,7 +124,7 @@ def remove_column(event):
 
     row_number -= 1
 
-
+#Clears table
 def clear_table(event):
     
     global row_number
@@ -134,16 +134,16 @@ def clear_table(event):
     row_number = 0 
 
     table_row_values = table.get_children() #Getting all ID values
-
+    #Deletes the table IDs
     for i in table_row_values:
         table.delete(i)
    
-
+#Enables the user to edit rows
 def edit_row(event):
    
     selected_item = table.selection()[0]
     selected_details = table.item(selected_item)
-    row = details[selected_details.get('values')[0]]
+    row = details[selected_details.get('values')[0]] #Gets details of the selected row.
 
     details[row[0]] = [row[0], name_box.get(), row[2], items.get(), number_of_items_box.get()]
 
@@ -180,13 +180,9 @@ items_text.pack()
 items_text.place(x=30, y=350)
 
 remove_button = tk.Button(root, text = "Remove", font = 50)
-remove_button.bind("<ButtonPress>", remove_column)
+remove_button.bind("<ButtonPress>", remove_row)
 remove_button.pack()
 remove_button.place(x=600,y=525)
-
-#edit_button = tk.Button(root, text = "Edit", font = 50)
-#edit_button.bind("<ButtonPress>", edit)
-#edit_button.pack()
 
 items = ttk.Combobox(root, values = "test")                                 
 items.pack()
