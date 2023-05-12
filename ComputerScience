@@ -49,6 +49,7 @@ def add_to_table(event):
 
     name = False
     item = False
+    
         
     #Random number generator
     receipt_number = rd.randint(1,500)
@@ -61,8 +62,10 @@ def add_to_table(event):
         name = True
 
     if number_checker(number_of_items_box.get()):
-
-        item = True
+        if(int(number_of_items_box.get()) <= 500):
+            item = True
+        else:
+            pop_up("The number of items must be less than or equal to 500")
     
     else:
         if len(number_of_items_box.get()) == 0:
@@ -70,6 +73,7 @@ def add_to_table(event):
 
         else:
             pop_up("The number of items must only have numbers")
+
         
 
     if name == True and item == True:  
