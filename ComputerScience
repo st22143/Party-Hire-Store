@@ -49,10 +49,25 @@ def add_to_table(event):
 
     name = False
     item = False
+
+    if(len(receipt_box.get()) == 0):
+        #Random number generator
+        receipt_number = str(rd.randint(1,10000000) + " given receipt")
+
+    else:
+        
+        if number_checker(receipt_box.get()):
+            
+            if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
+                receipt_number = receipt_box.get()
+            else: 
+                pop_up("Your receipt number must be 7 characters long")
+        
+        else:
+            pop_up("Your receipt number can only have numbers")
+
     
         
-    #Random number generator
-    receipt_number = rd.randint(1,500)
 
     if number_checker(name_box.get()):
         pop_up("The full name must only have letters")
@@ -197,9 +212,9 @@ receipt_label = tk.Label(root, text = "Receipt number: ", font = 25)
 receipt_label.pack()
 receipt_label.place(x=30, y=450)
 
-receipt_box = tk.Entry(root, width=50)
+receipt_box = tk.Entry(root, width=30)
 receipt_box.pack()
-receipt_box.place(x=150, y=450)
+receipt_box.place(x=180, y=450)
 
 submit = tk.Button(root, text = "Submit", font = 50)
 submit.bind("<ButtonPress>", add_to_table)
