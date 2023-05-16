@@ -52,7 +52,7 @@ def add_to_table(event):
 
     if(len(receipt_box.get()) == 0):
         #Random number generator
-        receipt_number = str(rd.randint(1,10000000) + " given receipt")
+        receipt_number = str(str(rd.randint(1000000,10000000)) + "    *given receipt")
 
     else:
         
