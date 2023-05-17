@@ -39,6 +39,10 @@ def pop_up(text):
     tk.Label(pop_up, text = str(text)).pack()
 
 
+    
+    
+
+
 
 
 #Function for submitting details to the table.
@@ -50,7 +54,7 @@ def add_to_table(event):
     name = False
     item = False
 
-    if(len(receipt_box.get()) == 0):
+    if (len(receipt_box.get()) == 0):
         #Random number generator
         receipt_number = str(str(rd.randint(1000000,10000000)) + "    *given receipt")
 
@@ -76,6 +80,7 @@ def add_to_table(event):
 
         name = True
 
+
     if number_checker(number_of_items_box.get()):
         if(0 <= int(number_of_items_box.get()) <= 500):
             item = True
@@ -90,10 +95,16 @@ def add_to_table(event):
             pop_up("The number of items must only have numbers")
 
         
+    name_detail = name_box.get()
+
+    item_detail = items.get()
+
+    number_of_items_detail = number_of_items_box.get()
+
 
     if name == True and item == True:  
         print("Valid")
-        details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
+        details.insert(row_number,[row_number,name_detail, str(receipt_number), item_detail, number_of_items_detail])
 
         table.insert(parent='', index = row_number, values=details[row_number])
         row_number+=1
@@ -164,8 +175,15 @@ def edit_row(event):
     selected_details = table.item(selected_item)
     row = details[selected_details.get('values')[0]] #Gets details of the selected row.
 
-    details[row[0]] = [row[0], name_box.get(), row[2], items.get(), number_of_items_box.get()]
+    name_detail = name_box.get()
 
+    item_detail = items.get()
+
+    number_of_items_detail = number_of_items_box.get()
+
+
+    details[row[0]] = [row[0], name_detail, row[2], item_detail, number_of_items_detail]
+    print(details)
     table.item(selected_item, values=details[row[0]])
 
 
@@ -200,7 +218,7 @@ items_text.pack()
 items_text.place(x=30, y=350)
 
 remove_button = tk.Button(root, text = "Remove", font = 50)
-remove_button.bind("<ButtonPress>", remove_row)
+remove_button.bind('<ButtonPress>', remove_row)
 remove_button.pack()
 remove_button.place(x=600,y=525)
 
@@ -252,6 +270,7 @@ table.heading('Name', text = "Full Name")
 table.heading('Receipt Number', text = "Receipt Number")
 table.heading('Item', text = "Item")
 table.heading('Number Of Items', text = "Number Of Items")
+table.bind('p', edit_row)
 
 table.pack()
 table.place(x=600,y=100)
