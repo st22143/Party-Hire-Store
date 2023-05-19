@@ -228,15 +228,6 @@ items_text = tk.Label(root, text = "Item: ", font = 50)
 items_text.pack()
 items_text.place(x=30, y=350)
 
-remove_button = tk.Button(root, text = "Remove", font = 50)
-remove_button.bind('<ButtonPress>', remove_row)
-remove_button.pack()
-remove_button.place(x=600,y=525)
-
-items = ttk.Combobox(root, values = ["Party Hire Stuff", "Other stuff"])                                 
-items.pack()
-items.place(x=100, y=350)
-
 receipt_label = tk.Label(root, text = "Receipt number: ", font = 25)
 receipt_label.pack()
 receipt_label.place(x=30, y=450)
@@ -245,31 +236,41 @@ receipt_box = tk.Entry(root, width=30)
 receipt_box.pack()
 receipt_box.place(x=180, y=450)
 
+items = ttk.Combobox(root, values = ["Party Hire Stuff", "Other stuff"])                                 
+items.pack()
+items.place(x=100, y=350)
+
+
 submit = tk.Button(root, text = "Submit", font = 50)
 submit.bind("<ButtonPress>", add_to_table)
 submit.pack()
-submit.place(x=300, y=500)
+submit.place(x=30, y=525)
+
+remove_button = tk.Button(root, text = "Remove", font = 50)
+remove_button.bind('<ButtonPress>', remove_row)
+remove_button.pack()
+remove_button.place(x=130,y=525)
 
 save = tk.Button(root, text = "Save", font = 50)
 save.bind("<ButtonPress>", save_details)
 save.pack()
-save.place(x = 700, y = 525)
+save.place(x = 230, y = 525)
 
 clear = tk.Button(root, text = "Clear", font = 50)
 clear.bind("<ButtonPress>", clear_table)
 clear.pack()
-clear.place(x = 800, y = 525)
+clear.place(x = 330, y = 525)
 
 edit = tk.Button(root, text = "Edit", font = 50)
 edit.bind("<ButtonPress>", edit_row)
 edit.pack()
-edit.place(x=900, y= 525)
+edit.place(x=430, y= 525)
 
 
 
 
 #Tkinter table/treeview
-table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=20)
+table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=27)
 table.column('#0', width=0, stretch=False) #Gets rid of invisible column
 table.column('#01', width=50)
 table.column('#02', width=150)
@@ -284,7 +285,7 @@ table.heading('Number Of Items', text = "Number Of Items")
 table.bind('p', edit_row)
 
 table.pack()
-table.place(x=600,y=100)
+table.place(x=600,y=50)
 
 #Tkinter scrollbar
 table_scrollbar = ttk.Scrollbar(root, orient ="vertical", command = table.yview)
