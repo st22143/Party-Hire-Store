@@ -57,7 +57,7 @@ def add_to_table(event):
 
     if (len(receipt_box.get()) == 0):
         #Random number generator
-        receipt_number = str(str(rd.randint(1000000,10000000)) + "    *given receipt")
+        receipt_number = str("Add a receipt!")
 
     else:
         
@@ -95,12 +95,22 @@ def add_to_table(event):
         else:
             pop_up("The number of items must only have numbers")
 
-        
-    name_detail = name_box.get()
+    if len(name_box.get()) == 0:
+        name_detail = "None"
+    else:
+        name_detail = name_box.get()
 
-    item_detail = items.get()
+    if len(items.get()) == 0:
+        item_detail = "None"
+    else:
+        item_detail = name_box.get()
 
-    number_of_items_detail = number_of_items_box.get()
+    if len(number_of_items_box.get()) == 0:
+        number_of_items_detail = "None"
+    else:
+        number_of_items_detail = name_box.get()
+
+
 
 
     if name == True and item == True:  
