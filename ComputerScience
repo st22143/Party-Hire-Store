@@ -35,6 +35,7 @@ def save_details(event):
 def pop_up(text):
     pop_up = tk.Toplevel(root)
     pop_up.geometry("300x25")
+    
     pop_up.title("Error")
     tk.Label(pop_up, text = str(text)).pack()
 
@@ -222,7 +223,7 @@ remove_button.bind('<ButtonPress>', remove_row)
 remove_button.pack()
 remove_button.place(x=600,y=525)
 
-items = ttk.Combobox(root, values = "test")                                 
+items = ttk.Combobox(root, values = ["Party Hire Stuff", "Other stuff"])                                 
 items.pack()
 items.place(x=100, y=350)
 
