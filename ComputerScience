@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-import random as rd
 import json
+
 
 #Predefined list 
 #Will add saving system using JSON soon
@@ -57,11 +57,11 @@ def add_to_table(event):
 
     if (len(receipt_box.get()) == 0):
         #Random number generator
-        receipt_number = str("Add a receipt!")
+        receipt_number = str("Error: No Receipt!")
 
     else:
         
-        if number_checker(receipt_box.get()):
+        if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
             
             if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
                 receipt_number = receipt_box.get()
@@ -181,16 +181,27 @@ def clear_table(event):
    
 #Enables the user to edit rows
 def edit_row(event):
+
+    if len(name_box.get()) == 0:
+        name_detail = "None"
+    else:
+        name_detail = name_box.get()
+
+    if len(items.get()) == 0:
+        item_detail = "None"
+    else:
+        item_detail = name_box.get()
+
+    if len(number_of_items_box.get()) == 0:
+        number_of_items_detail = "None"
+    else:
+        number_of_items_detail = name_box.get()
    
     selected_item = table.selection()[0]
     selected_details = table.item(selected_item)
     row = details[selected_details.get('values')[0]] #Gets details of the selected row.
 
-    name_detail = name_box.get()
 
-    item_detail = items.get()
-
-    number_of_items_detail = number_of_items_box.get()
 
 
     details[row[0]] = [row[0], name_detail, row[2], item_detail, number_of_items_detail]
@@ -203,9 +214,13 @@ root = tk.Tk()
 root.title("Julie's Party Hire Store Details")
 root.geometry("1920x1280")
 
-title = tk.Label(root, text = "Julie's Party Hire Store", font = 100)
+title_image = tk.PhotoImage(file="Title.png")
+
+title = tk.Label(root, image=title_image)
 title.pack()
 title.place(x=30, y=30)
+
+
 
 name = tk.Label(root, text = "Full Name: ", font=25)
 name.pack()
