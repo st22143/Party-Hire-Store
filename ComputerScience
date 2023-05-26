@@ -292,11 +292,15 @@ help_button = tk.Button(root)
 help_button.bind("<ButtonPress>", help_function)
 help_button.pack()
 
+frame_table = tk.Frame(root)
 
+#Tkinter scrollbar
+table_scrollbar = ttk.Scrollbar(frame_table)
+table_scrollbar.pack(side="right", fill = 'y')
 
 #Tkinter table/treeview
-table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=20)
-table.column('#0', width=0, stretch=False) #Gets rid of invisible column
+table = ttk.Treeview(frame_table, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=20, yscrollcommand = table_scrollbar.set)
+table.column('#0', width=0, stretch=False) #Gets rid of invisible column (shrinks it to an unnoticable level)
 table.column('#01', width=50)
 table.column('#02', width=150)
 table.column('#03', width=150)
@@ -310,11 +314,12 @@ table.heading('Number Of Items', text = "Number Of Items")
 table.bind('p', edit_row)
 
 table.pack()
-table.place(x=600,y=150)
 
-#Tkinter scrollbar
-table_scrollbar = ttk.Scrollbar(root, orient ="vertical", command = table.yview)
-table_scrollbar.pack(side="right")
+
+table_scrollbar.config(command = table.yview)
+
+frame_table.pack()
+frame_table.place(x=600,y=150)
 
 load_details()
 
