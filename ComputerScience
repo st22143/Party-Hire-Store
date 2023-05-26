@@ -32,9 +32,9 @@ def save_details(event):
         print("Saved")
 
 
-def pop_up(text):
+def pop_up(text, size):
     pop_up = tk.Toplevel(root)
-    pop_up.geometry("300x25")
+    pop_up.geometry(size)
     
     pop_up.title("Error")
     tk.Label(pop_up, text = str(text)).pack()
@@ -66,16 +66,16 @@ def add_to_table(event):
             if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
                 receipt_number = receipt_box.get()
             else: 
-                pop_up("Your receipt number must be 7 characters long")
+                pop_up("Your receipt number must be 7 characters long", "300x25")
         
         else:
-            pop_up("Your receipt number can only have numbers")
+            pop_up("Your receipt number can only have numbers", "300x25")
 
     
         
 
     if number_checker(name_box.get()):
-        pop_up("The full name must only have letters")
+        pop_up("The full name must only have letters", "300x25")
 
     else:
 
@@ -86,14 +86,14 @@ def add_to_table(event):
         if(0 <= int(number_of_items_box.get()) <= 500):
             item = True
         else:
-            pop_up("The number of items must be less than or equal to 500 and greater than or equal to 0")
+            pop_up("The number of items must be less than or equal to 500 and greater than or equal to 0", "300x25")
     
     else:
         if len(number_of_items_box.get()) == 0:
             item = True
 
         else:
-            pop_up("The number of items must only have numbers")
+            pop_up("The number of items must only have numbers", "300x25")
 
     if len(name_box.get()) == 0:
         name_detail = "None"
@@ -119,6 +119,10 @@ def add_to_table(event):
 
         table.insert(parent='', index = row_number, values=details[row_number])
         row_number+=1
+        
+        
+
+        
 
     
 
@@ -208,17 +212,20 @@ def edit_row(event):
     print(details)
     table.item(selected_item, values=details[row[0]])
 
+def help_function(event):
+    pop_up("- Select the rows you want to edit and delete.", "300x500")
 
 #Tkinter
 root = tk.Tk()
 root.title("Julie's Party Hire Store Details")
 root.geometry("1920x1280")
 
+
 title_image = tk.PhotoImage(file="Title.png")
 
 title = tk.Label(root, image=title_image)
 title.pack()
-title.place(x=30, y=30)
+title.place(x=0, y=10)
 
 
 
@@ -269,23 +276,26 @@ remove_button.place(x=130,y=525)
 save = tk.Button(root, text = "Save", font = 50)
 save.bind("<ButtonPress>", save_details)
 save.pack()
-save.place(x = 230, y = 525)
-
-clear = tk.Button(root, text = "Clear", font = 50)
-clear.bind("<ButtonPress>", clear_table)
-clear.pack()
-clear.place(x = 330, y = 525)
+save.place(x = 30, y = 590)
 
 edit = tk.Button(root, text = "Edit", font = 50)
 edit.bind("<ButtonPress>", edit_row)
 edit.pack()
-edit.place(x=430, y= 525)
+edit.place(x=240, y= 525)
 
+clear = tk.Button(root, text = "Clear", font = 50)
+clear.bind("<ButtonPress>", clear_table)
+clear.pack()
+clear.place(x = 310, y = 525)
+
+help_button = tk.Button(root)
+help_button.bind("<ButtonPress>", help_function)
+help_button.pack()
 
 
 
 #Tkinter table/treeview
-table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=27)
+table = ttk.Treeview(root, columns = ["ID", "Name","Receipt Number", "Item", "Number Of Items"], height=20)
 table.column('#0', width=0, stretch=False) #Gets rid of invisible column
 table.column('#01', width=50)
 table.column('#02', width=150)
@@ -300,7 +310,7 @@ table.heading('Number Of Items', text = "Number Of Items")
 table.bind('p', edit_row)
 
 table.pack()
-table.place(x=600,y=50)
+table.place(x=600,y=150)
 
 #Tkinter scrollbar
 table_scrollbar = ttk.Scrollbar(root, orient ="vertical", command = table.yview)
@@ -308,6 +318,5 @@ table_scrollbar.pack(side="right")
 
 load_details()
 
-
-
 root.mainloop()
+
