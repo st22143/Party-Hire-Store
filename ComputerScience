@@ -7,6 +7,7 @@ import json
 #Will add saving system using JSON soon
 row_number = 0
 details = []
+saved = True
 
 
 
@@ -26,10 +27,13 @@ def load_details():
 
 
 def save_details(event):
+    global saved
     saved_details = json.dumps(details)
     with open('mydata.json', 'w') as json_file:
         json_file.write(saved_details)
         print("Saved")
+        saved = True
+        save_log.configure(text = "Saved", fg='black')
 
 
 def pop_up(title, text, size):
@@ -49,6 +53,7 @@ def pop_up(title, text, size):
 #Function for submitting details to the table.
 def add_to_table(event):
 
+    global saved
     global row_number
     global details
 
@@ -95,30 +100,15 @@ def add_to_table(event):
         else:
             pop_up("Error", "The number of items must only have numbers", "300x25")
 
-    if len(name_box.get()) == 0:
-        name_detail = "None"
-    else:
-        name_detail = name_box.get()
-
-    if len(items.get()) == 0:
-        item_detail = "None"
-    else:
-        item_detail = name_box.get()
-
-    if len(number_of_items_box.get()) == 0:
-        number_of_items_detail = "None"
-    else:
-        number_of_items_detail = name_box.get()
-
-
-
 
     if name == True and item == True:  
         print("Valid")
-        details.insert(row_number,[row_number,name_detail, str(receipt_number), item_detail, number_of_items_detail])
-
+        details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
+        print(details[row_number])
         table.insert(parent='', index = row_number, values=details[row_number])
         row_number+=1
+        saved = False
+        save_log.configure(text = "Unsaved", fg = 'red')
         
         
 
@@ -139,6 +129,7 @@ def remove_row(event):
 
     global row_number
     global details
+    global saved
 
    
 
@@ -168,12 +159,15 @@ def remove_row(event):
         row_placeholder+=1
 
     row_number -= 1
+    saved = False
+    save_log.configure(text = "Unsaved", fg = 'red')
 
 #Clears table
 def clear_table(event):
     
     global row_number
     global details
+    global saved
 
     details = []
     row_number = 0 
@@ -182,9 +176,12 @@ def clear_table(event):
     #Deletes the table IDs
     for i in table_row_values:
         table.delete(i)
+    saved = False
+    save_log.configure(text = "Unsaved", fg = 'red')
    
 #Enables the user to edit rows
 def edit_row(event):
+    global saved
 
     if len(name_box.get()) == 0:
         name_detail = "None"
@@ -211,9 +208,20 @@ def edit_row(event):
     details[row[0]] = [row[0], name_detail, row[2], item_detail, number_of_items_detail]
     print(details)
     table.item(selected_item, values=details[row[0]])
+    saved = False
+    save_log.configure(text = "Unsaved", fg = 'red')
 
 def help_function(event):
     pop_up("Help", "- Select the rows you want to edit and delete.", "300x500")
+
+def close_window():
+    global saved
+    
+    if saved == True:
+        root.destroy()
+    
+    if saved == False:
+        pop_up("Warning!", "You have a few unsaved changes", "250x30")
 
 #Tkinter
 root = tk.Tk()
@@ -222,10 +230,13 @@ root.geometry("1920x1280")
 
 
 title_image = tk.PhotoImage(file="Title.png")
+title_image = title_image.zoom(10)
+title_image = title_image.subsample(15)
+
 
 title = tk.Label(root, image=title_image)
 title.pack()
-title.place(x=0, y=10)
+title.place(x=0, y=20)
 
 
 
@@ -288,9 +299,21 @@ clear.bind("<ButtonPress>", clear_table)
 clear.pack()
 clear.place(x = 310, y = 525)
 
-help_button = tk.Button(root)
+
+important = tk.Frame(root)
+
+help_button = tk.Button(important)
+
 help_button.bind("<ButtonPress>", help_function)
 help_button.pack()
+
+exit_button = tk.Button(important, text = "Exit", font = ("Arial", 10, "bold"), command = close_window)
+exit_button.pack()
+
+save_log = tk.Label (important, text = "Saved")
+save_log.pack()
+
+important.pack()
 
 frame_table = tk.Frame(root)
 
