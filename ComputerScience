@@ -3,32 +3,34 @@ from tkinter import ttk
 import json
 
 
-#Predefined list 
+#Predefined variables
 #Will add saving system using JSON soon
 row_number = 0
 details = []
 saved = True
+pop_up_on = False
 
+#All functions for buttons and usability are below
 
+def load_details(): #JSON will be used to store data externally 
 
-def load_details():
-
-    global row_number
-    global details
+    global row_number, details
 
     with open('mydata.json', 'r') as json_file:
 
-        details = json.loads(json_file.read())
+        details = json.loads(json_file.read()) #All stored data (if there is any) will be put into this list
         
     
         for i in details:
-            table.insert(parent='', index = row_number, values=i)
+            table.insert(parent='', index = row_number, values=i) #Updating treeview with saved list
             row_number += 1
 
 
-def save_details(event):
+def save_details(event): #This function will be called when the save button is clicked
+
     global saved
-    saved_details = json.dumps(details)
+
+    saved_details = json.dumps(details) #The entire list is being stored
     with open('mydata.json', 'w') as json_file:
         json_file.write(saved_details)
         print("Saved")
@@ -36,7 +38,7 @@ def save_details(event):
         save_log.configure(text = "Saved", fg='black')
 
 
-def pop_up(title, text, size):
+def pop_up(title, text, size): #There may be a lot of pop up windows so it would be cleaner to keep it as a function
     pop_up = tk.Toplevel(root)
     pop_up.geometry(size)
     
@@ -44,77 +46,6 @@ def pop_up(title, text, size):
     tk.Label(pop_up, text = str(text)).pack()
 
 
-    
-    
-
-
-
-
-#Function for submitting details to the table.
-def add_to_table(event):
-
-    global saved
-    global row_number
-    global details
-
-    name = False
-    item = False
-
-    if (len(receipt_box.get()) == 0):
-        #Random number generator
-        receipt_number = str("Error: No Receipt!")
-
-    else:
-        
-        if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
-            
-            if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
-                receipt_number = receipt_box.get()
-            else: 
-                pop_up("Error", "Your receipt number must be 7 characters long", "300x25")
-        
-        else:
-            pop_up("Error", "Your receipt number can only have numbers", "300x25")
-
-    
-        
-
-    if number_checker(name_box.get()):
-        pop_up("Error", "The full name must only have letters", "300x25")
-
-    else:
-
-        name = True
-
-
-    if number_checker(number_of_items_box.get()):
-        if(0 <= int(number_of_items_box.get()) <= 500):
-            item = True
-        else:
-            pop_up("Error", "The number of items must be less than or equal to 500 and greater than or equal to 0", "300x25")
-    
-    else:
-        if len(number_of_items_box.get()) == 0:
-            item = True
-
-        else:
-            pop_up("Error", "The number of items must only have numbers", "300x25")
-
-
-    if name == True and item == True:  
-        print("Valid")
-        details.insert(row_number,[row_number,name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
-        print(details[row_number])
-        table.insert(parent='', index = row_number, values=details[row_number])
-        row_number+=1
-        saved = False
-        save_log.configure(text = "Unsaved", fg = 'red')
-        
-        
-
-        
-
-    
 
 
 #Checks each individual character to see if there's a number
@@ -124,13 +55,81 @@ def number_checker(number):
             return True
     
 
+#Function for submitting details to the table.
+def add_to_table(event):
+
+    global saved, row_number, details
+
+    name = False
+    item = False
+
+
+
+
+        
+    if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
+            
+        if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
+                receipt_number = receipt_box.get()
+                receipt_warning.config(text = " ")
+        else: 
+                receipt_warning.config(text = "The receipt number should only have 7 characters")
+        
+    else:
+        
+        if len(receipt_box.get().strip()) != 0:
+            receipt_warning.config(text = "Only enter numbers")
+
+    if number_checker(name_box.get()):
+        name_warning.config(text="There can only be letters in a name", fg = 'red')
+
+    else:
+
+        name = True
+        name_warning.config(text = " ")
+
+    if number_checker(number_of_items_box.get()):
+        
+        if(0 <= int(number_of_items_box.get()) <= 500):
+            item = True
+            number_of_items_warning.config(text = " ")
+        else:
+            number_of_items_warning.config(text = "The numbers of items can only be from 0 to 500")
+    
+    else:
+        
+        if len(number_of_items_box.get()) == 0:
+            item = True
+            number_of_items_warning.config(text = " ")
+
+        else:
+            number_of_items_warning.config(text = "There can only be numbers")
+
+
+    if len(name_box.get().strip()) == 0 or len(items.get().strip()) == 0 or len(number_of_items_box.get().strip()) == 0 or len(receipt_box.get().strip()) == 0:
+
+        log.config(text="Some of your texts are empty... Add something!", fg = 'red')
+
+    else:
+
+        log.config(text=" ")
+
+        if name == True and item == True:  
+            print("Valid")
+            details.insert(row_number,[row_number, name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
+            print(details[row_number])
+            table.insert(parent='', index = row_number, values=details[row_number])
+            row_number+=1
+            saved = False
+            save_log.configure(text = "Unsaved", fg = 'red')
+        
+        
+
+
 #Removes a row
 def remove_row(event):
 
-    global row_number
-    global details
-    global saved
-
+    global row_number, details, saved
    
 
     selected_item = table.selection()[0] #Selected row
@@ -165,9 +164,7 @@ def remove_row(event):
 #Clears table
 def clear_table(event):
     
-    global row_number
-    global details
-    global saved
+    global row_number, details, saved
 
     details = []
     row_number = 0 
@@ -179,42 +176,84 @@ def clear_table(event):
     saved = False
     save_log.configure(text = "Unsaved", fg = 'red')
    
+
+
 #Enables the user to edit rows
 def edit_row(event):
+
     global saved
 
-    if len(name_box.get()) == 0:
-        name_detail = "None"
+    name = False
+    receipt = False
+    item = False
+
+    if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
+            
+        if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
+                receipt_warning.config(text = " ")
+                receipt = True
+        else: 
+                receipt_warning.config(text = "The receipt number should only have 7 characters")
+               
+        
     else:
-        name_detail = name_box.get()
+        
+        if len(receipt_box.get().strip()) != 0:
+            receipt_warning.config(text = "Only enter numbers")
+    
 
-    if len(items.get()) == 0:
-        item_detail = "None"
+    if number_checker(name_box.get()):
+        name_warning.config(text="There can only be letters in a name", fg = 'red')
+
     else:
-        item_detail = name_box.get()
 
-    if len(number_of_items_box.get()) == 0:
-        number_of_items_detail = "None"
+        name = True
+        name_warning.config(text = " ")
+
+    if number_checker(number_of_items_box.get()):
+        
+        if(0 <= int(number_of_items_box.get()) <= 500):
+            item = True
+            number_of_items_warning.config(text = " ")
+        else:
+            number_of_items_warning.config(text = "The numbers of items can only be from 0 to 500")
+    
     else:
-        number_of_items_detail = name_box.get()
-   
-    selected_item = table.selection()[0]
-    selected_details = table.item(selected_item)
-    row = details[selected_details.get('values')[0]] #Gets details of the selected row.
+        
+        if len(number_of_items_box.get()) == 0:
+            item = True
+            number_of_items_warning.config(text = " ")
+
+        else:
+            number_of_items_warning.config(text = "There can only be numbers")
+
+    if len(name_box.get().strip()) == 0 or len(items.get().strip()) == 0 or len(number_of_items_box.get().strip()) == 0 or len(receipt_box.get().strip()) == 0:
+
+        log.config(text="Some of your texts are empty... Add something!", fg = 'red')
+
+    else:
+    
+        if item == True and name == True and receipt == True:
+
+            selected_item = table.selection()[0]
+            selected_details = table.item(selected_item)
+            row = details[selected_details.get('values')[0]] #Gets details of the selected row.
+
+
+            details[row[0]] = [row[0], name_box.get(), receipt_box.get(), items.get(), number_of_items_box.get()]
+            print(details)
+            table.item(selected_item, values=details[row[0]])
+            saved = False
+            save_log.configure(text = "Unsaved", fg = 'red')
 
 
 
-
-    details[row[0]] = [row[0], name_detail, row[2], item_detail, number_of_items_detail]
-    print(details)
-    table.item(selected_item, values=details[row[0]])
-    saved = False
-    save_log.configure(text = "Unsaved", fg = 'red')
-
-def help_function(event):
+def help_function(event): #Brief tutorial for new users
     pop_up("Help", "- Select the rows you want to edit and delete.", "300x500")
 
-def close_window():
+    
+
+def close_window(): #Exit button
     global saved
     
     if saved == True:
@@ -223,7 +262,8 @@ def close_window():
     if saved == False:
         pop_up("Warning!", "You have a few unsaved changes", "250x30")
 
-#Tkinter
+#All the tkinter labels, entries, treeviews, buttons and more are below
+
 root = tk.Tk()
 root.title("Julie's Party Hire Store Details")
 root.geometry("1920x1280")
@@ -238,40 +278,64 @@ title = tk.Label(root, image=title_image)
 title.pack()
 title.place(x=0, y=20)
 
+name_frame = tk.Frame(root)
+
+name_warning = tk.Label(name_frame, fg = 'red')
+name_warning.pack(side='bottom')
+
+name = tk.Label(name_frame, text = "Full Name: ", font=25)
+name.pack(side="left")
+
+name_box = tk.Entry(name_frame, width=50)
+name_box.pack(side="right")
 
 
-name = tk.Label(root, text = "Full Name: ", font=25)
-name.pack()
-name.place(x=30, y=150)
+name_frame.pack(side="left")
+name_frame.place(x=30, y=130)
 
-name_box = tk.Entry(root, width=50)
-name_box.pack()
-name_box.place(x=150,y=150)
+number_items_frame = tk.Frame(root)
+
+number_of_items_warning = tk.Label(number_items_frame, fg = 'red')
+number_of_items_warning.pack(side="bottom")
+
+number_of_items = tk.Label(number_items_frame, text = "Number Of Items: ", font=25)
+number_of_items.pack(side="left")
 
 
-number_of_items = tk.Label(root, text = "Number Of Items: ", font=25)
-number_of_items.pack()
-number_of_items.place(x=30, y=250)
+number_of_items_box = tk.Entry(number_items_frame, width=50)
+number_of_items_box.pack(side="right")
 
-number_of_items_box = tk.Entry(root, width=50)
-number_of_items_box.pack()
-number_of_items_box.place(x=200,y=250)
 
-items_text = tk.Label(root, text = "Item: ", font = 50)
-items_text.pack()
-items_text.place(x=30, y=350)
+number_items_frame.pack(side="left")
+number_items_frame.place(x=30, y=230)
 
-receipt_label = tk.Label(root, text = "Receipt number: ", font = 25)
-receipt_label.pack()
-receipt_label.place(x=30, y=450)
+items_frame = tk.Frame(root)
 
-receipt_box = tk.Entry(root, width=30)
-receipt_box.pack()
-receipt_box.place(x=180, y=450)
+items_text = tk.Label(items_frame, text = "Item: ", font = 50)
+items_text.pack(side="left")
 
-items = ttk.Combobox(root, values = ["Party Hire Stuff", "Other stuff"])                                 
-items.pack()
-items.place(x=100, y=350)
+items = ttk.Combobox(items_frame, values = ["Party Hire Stuff", "Other stuff"])                                 
+items.pack(side="right")
+
+items_frame.pack(side="left")
+items_frame.place(x=30, y=330)
+
+receipt_frame = tk.Frame(root)
+
+receipt_warning = tk.Label(receipt_frame, fg = 'red')
+receipt_warning.pack(side="bottom")
+
+receipt_label = tk.Label(receipt_frame, text = "Receipt number: ", font = 25)
+receipt_label.pack(side="left")
+
+
+receipt_box = tk.Entry(receipt_frame, width=30)
+receipt_box.pack(side="right")
+
+
+receipt_frame.pack(side="left")
+receipt_frame.place(x=30, y=430)
+
 
 
 submit = tk.Button(root, text = "Submit", font = 50)
@@ -302,16 +366,16 @@ clear.place(x = 310, y = 525)
 
 important = tk.Frame(root)
 
-help_button = tk.Button(important)
+help_button = tk.Button(important, text = "Help", font = ("Arial", 10, "bold"))
 
 help_button.bind("<ButtonPress>", help_function)
-help_button.pack()
+help_button.pack(side='left')
 
 exit_button = tk.Button(important, text = "Exit", font = ("Arial", 10, "bold"), command = close_window)
-exit_button.pack()
+exit_button.pack(side='right')
 
 save_log = tk.Label (important, text = "Saved")
-save_log.pack()
+save_log.pack(side='bottom')
 
 important.pack()
 
@@ -340,6 +404,9 @@ table.pack()
 
 
 table_scrollbar.config(command = table.yview)
+
+log = tk.Label(frame_table)
+log.pack(side='bottom')
 
 frame_table.pack()
 frame_table.place(x=600,y=150)
