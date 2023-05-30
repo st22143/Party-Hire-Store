@@ -226,10 +226,11 @@ def edit_row(event):
             
             if len(details) != 0:
                 
+                placeholder = True
+                
                 for i in details:   
                     
-                    placeholder = True
-                    
+
                     if placeholder == True:
 
 
@@ -238,7 +239,6 @@ def edit_row(event):
                             receipt_warning.config(text = "This row already has this receipt number")
                             placeholder = False
                             receipt = False
-                        
 
                         else:
 
@@ -297,10 +297,10 @@ def edit_row(event):
             selected_item = table.selection()[0]
             selected_details = table.item(selected_item)
             row = details[selected_details.get('values')[0]] #Gets details of the selected row.
+            print("testing" + str(row[2]))
 
 
             details[row[0]] = [row[0], name_box.get(), receipt_box.get(), items.get(), number_of_items_box.get()]
-            print(details)
             table.item(selected_item, values=details[row[0]])
             saved = False
             save_log.configure(text = "Unsaved", fg = 'red')
