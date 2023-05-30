@@ -308,9 +308,69 @@ def edit_row(event):
 
 
 def help_function(event): #Brief tutorial for new users
-    pop_up("Help", "- Select the rows you want to edit and delete.", "300x500")
+    
+    global pop_up_on
+
+    if pop_up_on == False:
+        help_window = tk.Tk()
+        help_window.title("Help")
+        help_window.geometry("1000x500")
+
+        help_title = tk.Label(help_window, text = "\n Tutorial: ", font = 25)
+        help_title.pack()
+
+        help_message = tk.Label(help_window, 
+                            text = 
+                            "\n - Enter the necessary details (name, item, number of items and receipt number) in the text boxes to your left. \n \n"
+                            + " - Warnings will show up if invalid entries or potential mistakes occur. \n \n" 
+                            + " - There are buttons below the text boxes. You will be able submit details to the table on your right. \n \n"
+                            + " - If you wish to edit or delete rows on table then you must CLICK on the row you want to edit or delete before clicking the button. \n \n"
+                            + " - A save button exists to save all the details on your table \n \n"
+                            + " - You may adjust text sizes, text colours, background colours and enable autosave in the properties window above the table \n \n"
+                            + " - Good luck!")
+        help_message.pack()
+
+        help_window.mainloop()
+
+        pop_up_on = True
 
     
+def preferences_window(event):
+
+    global pop_up_on
+    colours = ["black", "white", "red", "brown", "orange", "yellow", "green", "blue", "purple", "pink"]
+
+    
+
+    def submit(event):
+        name_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+        items_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+        number_of_items_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+        receipt_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+    
+    if pop_up_on == False:
+
+        preferences = tk.Tk()
+        preferences.title("Preferences")
+        
+
+        tk.Label(preferences, text = "Text colour").pack(side="left")
+        text_colour = ttk.Combobox(preferences, values = colours)
+        text_colour.pack(side="right")
+
+        tk.Label(preferences, text = "Text background").pack(side="left")
+        text_background = ttk.Combobox(preferences, values = colours)
+        text_background.pack(side="right")
+
+        tk.Label(preferences, text = "Text size").pack(side="left")
+        text_size = tk.Entry(preferences)
+        text_size.pack(side="right")
+
+        submit_preferences = tk.Button(preferences, text = "Submit")
+        submit_preferences.bind("<ButtonPress>", submit)
+        submit_preferences.pack()
+        
+        
 
 def close_window(): #Exit button
     global saved
@@ -342,8 +402,8 @@ name_frame = tk.Frame(root)
 name_warning = tk.Label(name_frame, fg = 'red')
 name_warning.pack(side='bottom')
 
-name = tk.Label(name_frame, text = "Full Name: ", font=25)
-name.pack(side="left")
+name_label = tk.Label(name_frame, text = "Full Name: ", font=25)
+name_label.pack(side="left")
 
 name_box = tk.Entry(name_frame, width=50)
 name_box.pack(side="right")
@@ -357,8 +417,8 @@ number_items_frame = tk.Frame(root)
 number_of_items_warning = tk.Label(number_items_frame, fg = 'red')
 number_of_items_warning.pack(side="bottom")
 
-number_of_items = tk.Label(number_items_frame, text = "Number Of Items: ", font=25)
-number_of_items.pack(side="left")
+number_of_items_label = tk.Label(number_items_frame, text = "Number Of Items: ", font=25)
+number_of_items_label.pack(side="left")
 
 
 number_of_items_box = tk.Entry(number_items_frame, width=50)
@@ -370,8 +430,8 @@ number_items_frame.place(x=30, y=230)
 
 items_frame = tk.Frame(root)
 
-items_text = tk.Label(items_frame, text = "Item: ", font = 50)
-items_text.pack(side="left")
+items_label = tk.Label(items_frame, text = "Item: ", font = 50)
+items_label.pack(side="left")
 
 items = ttk.Combobox(items_frame, values = ["Party Hire Stuff", "Other stuff"])                                 
 items.pack(side="right")
@@ -422,21 +482,27 @@ clear.bind("<ButtonPress>", clear_table)
 clear.pack()
 clear.place(x = 310, y = 525)
 
+#Frame for important widgets
 
 important = tk.Frame(root)
 
-help_button = tk.Button(important, text = "Help", font = ("Arial", 10, "bold"))
+save_log = tk.Label (important, text = "\n Saved")
+save_log.pack(side='bottom')
 
+help_button = tk.Button(important, text = "Help", font = ("Arial", 10, "bold"))
 help_button.bind("<ButtonPress>", help_function)
 help_button.pack(side='left')
 
 exit_button = tk.Button(important, text = "Exit", font = ("Arial", 10, "bold"), command = close_window)
 exit_button.pack(side='right')
 
-save_log = tk.Label (important, text = "Saved")
-save_log.pack(side='bottom')
+preferences_button = tk.Button(important, text = "Preferences", font = ("Arial", 10, "bold"))
+preferences_button.bind("<ButtonPress>", preferences_window)
+preferences_button.pack()
+
 
 important.pack()
+
 
 frame_table = tk.Frame(root)
 
@@ -469,6 +535,7 @@ log.pack(side='bottom')
 
 frame_table.pack()
 frame_table.place(x=600,y=150)
+
 
 load_details()
 
