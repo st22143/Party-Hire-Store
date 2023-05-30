@@ -492,7 +492,11 @@ clear.place(x = 310, y = 525)
 
 #Frame for important widgets
 
-important = tk.Frame(root)
+
+
+frame_table = tk.Frame(root)
+
+important = tk.Frame(frame_table)
 
 save_log = tk.Label (important, text = "\n Saved")
 save_log.pack(side='bottom')
@@ -509,11 +513,7 @@ preferences_button.bind("<ButtonPress>", preferences_window)
 preferences_button.pack()
 
 
-important.pack()
-
-
-frame_table = tk.Frame(root)
-
+important.pack(side="top")
 #Tkinter scrollbar
 table_scrollbar = ttk.Scrollbar(frame_table)
 table_scrollbar.pack(side="right", fill = 'y')
@@ -538,11 +538,12 @@ table.pack()
 
 table_scrollbar.config(command = table.yview)
 
+
 log = tk.Label(frame_table)
 log.pack(side='bottom')
 
 frame_table.pack()
-frame_table.place(x=600,y=150)
+frame_table.place(x=600,y=100)
 
 
 load_details()
