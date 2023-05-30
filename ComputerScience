@@ -22,6 +22,7 @@ def load_details(): #JSON will be used to store data externally
         
     
         for i in details:
+            
             table.insert(parent='', index = row_number, values=i) #Updating treeview with saved list
             row_number += 1
 
@@ -31,7 +32,9 @@ def save_details(event): #This function will be called when the save button is c
     global saved
 
     saved_details = json.dumps(details) #The entire list is being stored
+    
     with open('mydata.json', 'w') as json_file:
+        
         json_file.write(saved_details)
         print("Saved")
         saved = True
@@ -39,6 +42,7 @@ def save_details(event): #This function will be called when the save button is c
 
 
 def pop_up(title, text, size): #There may be a lot of pop up windows so it would be cleaner to keep it as a function
+    
     pop_up = tk.Toplevel(root)
     pop_up.geometry(size)
     
@@ -50,28 +54,59 @@ def pop_up(title, text, size): #There may be a lot of pop up windows so it would
 
 #Checks each individual character to see if there's a number
 def number_checker(number):
+    
     for i in number:
+        
         if i.isnumeric():
+            
             return True
     
 
 #Function for submitting details to the table.
 def add_to_table(event):
 
-    global saved, row_number, details
+    global saved, row_number, details  #These variables are from outside of this function and will share the same values everywhere else.
 
-    name = False
+    name = False #Booleans for checking if certain requirements are met. Names can only have strings. Numbers can only have integers.
     item = False
+    receipt = False
 
-
-
+    
 
         
     if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
             
         if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
+            
+            if len(details) != 0:
+                
+                placeholder = True
+
+                for i in details:   
+
+                    if placeholder == True:
+
+
+                        if int(receipt_box.get()) == int(i[2]):
+
+                            receipt_warning.config(text = "Some row already has this receipt number")
+                            placeholder = False
+                            receipt = False
+                        
+
+
+                        else:
+
+                            receipt_number = receipt_box.get()
+                            receipt_warning.config(text = " ")
+                            receipt = True
+
+            
+            else:
+
                 receipt_number = receipt_box.get()
                 receipt_warning.config(text = " ")
+                receipt = True
         else: 
                 receipt_warning.config(text = "The receipt number should only have 7 characters")
         
@@ -114,10 +149,8 @@ def add_to_table(event):
 
         log.config(text=" ")
 
-        if name == True and item == True:  
-            print("Valid")
+        if name == True and item == True and receipt == True:  
             details.insert(row_number,[row_number, name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
-            print(details[row_number])
             table.insert(parent='', index = row_number, values=details[row_number])
             row_number+=1
             saved = False
@@ -190,10 +223,36 @@ def edit_row(event):
     if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
             
         if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
+            
+            if len(details) != 0:
+                
+                for i in details:   
+                    
+                    placeholder = True
+                    
+                    if placeholder == True:
+
+
+                        if int(receipt_box.get()) == int(i[2]):
+
+                            receipt_warning.config(text = "This row already has this receipt number")
+                            placeholder = False
+                            receipt = False
+                        
+
+                        else:
+
+                            receipt_warning.config(text = " ")
+                            receipt = True
+
+            
+            else:
+
                 receipt_warning.config(text = " ")
                 receipt = True
         else: 
                 receipt_warning.config(text = "The receipt number should only have 7 characters")
+
                
         
     else:
