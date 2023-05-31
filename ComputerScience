@@ -6,10 +6,10 @@ import json
 
 
 #Predefined variables
-#Will add saving system using JSON soon
 row_number = 0
 details = []
 saved = True
+autosaved = False
 
 
 #All functions for buttons and usability are below
@@ -75,7 +75,7 @@ def add_to_table(event):
 
     
 
-        
+    #Checks if receipt is valid    
     if number_checker(receipt_box.get()): # The number_checker method which was previously created checks if receipt_box.get() has any numbers
             
         if(int(receipt_box.get()) < 10000000 and int(receipt_box.get()) > 1000000):
@@ -114,9 +114,12 @@ def add_to_table(event):
         
     else:
         
-        if len(receipt_box.get().strip()) != 0:
+        if length_checker(receipt_box.get()) == False:
             receipt_warning.config(text = "Only enter numbers")
+    #Receipt code ends here
 
+
+    #Checks if name is valid
     if number_checker(name_box.get()):
         name_warning.config(text="There can only be letters in a name", fg = 'red')
 
@@ -141,9 +144,10 @@ def add_to_table(event):
 
         else:
             number_of_items_warning.config(text = "There can only be numbers")
+            
 
 
-    if len(name_box.get().strip()) == 0 or len(items.get().strip()) == 0 or len(number_of_items_box.get().strip()) == 0 or len(receipt_box.get().strip()) == 0:
+    if length_checker([name_box.get(), items.get(), number_of_items_box.get(), receipt_box.get()]):
 
         log.config(text="Some of your texts are empty... Add something!", fg = 'red')
 
@@ -155,8 +159,14 @@ def add_to_table(event):
             details.insert(row_number,[row_number, name_box.get(), str(receipt_number), items.get(), number_of_items_box.get()])
             table.insert(parent='', index = row_number, values=details[row_number])
             row_number+=1
-            saved = False
-            save_log.configure(text = "\n Unsaved \n", fg = 'red')
+            
+            if autosaved == True:
+                saved = True
+                save_details()
+            
+            else:
+                saved = False
+                save_log.configure(text = "\n Unsaved \n", fg = 'red')
         
         
 
@@ -193,8 +203,14 @@ def remove_row(event):
         row_placeholder+=1
 
     row_number -= 1
-    saved = False
-    save_log.configure(text = "\n Unsaved \n", fg = 'red')
+    
+    if autosaved == True:
+        saved = True
+        save_details()
+            
+    else:
+        saved = False
+        save_log.configure(text = "\n Unsaved \n", fg = 'red')
 
 #Clears table
 def clear_table(event):
@@ -208,8 +224,14 @@ def clear_table(event):
     #Deletes the table IDs
     for i in table_row_values:
         table.delete(i)
-    saved = False
-    save_log.configure(text = "\n Unsaved \n", fg = 'red')
+    
+    if autosaved == True:
+        saved = True
+        save_details()
+            
+    else:
+        saved = False
+        save_log.configure(text = "\n Unsaved \n", fg = 'red')
    
 
 
@@ -259,7 +281,7 @@ def edit_row(event):
         
     else:
         
-        if len(receipt_box.get().strip()) != 0:
+        if length_checker(receipt_box.get()) == False:
             receipt_warning.config(text = "Only enter numbers")
     
 
@@ -288,7 +310,7 @@ def edit_row(event):
         else:
             number_of_items_warning.config(text = "There can only be numbers")
 
-    if len(name_box.get().strip()) == 0 or len(items.get().strip()) == 0 or len(number_of_items_box.get().strip()) == 0 or len(receipt_box.get().strip()) == 0:
+    if length_checker([name_box.get(), items.get(), number_of_items_box.get(), receipt_box.get()]):
 
         log.config(text="Some of your texts are empty... Add something!", fg = 'red')
 
@@ -304,8 +326,14 @@ def edit_row(event):
 
             details[row[0]] = [row[0], name_box.get(), receipt_box.get(), items.get(), number_of_items_box.get()]
             table.item(selected_item, values=details[row[0]])
-            saved = False
-            save_log.configure(text = "\n Unsaved \n", fg = 'red')
+            
+            if autosaved == True:
+                saved = True
+                save_details()
+            
+            else:
+                saved = False
+                save_log.configure(text = "\n Unsaved \n", fg = 'red')
 
 
 
@@ -319,7 +347,8 @@ def help_function(event): #Brief tutorial for new users
                             + " - If you wish to edit or delete rows on table then you must CLICK on the row you want to edit or delete before clicking the button. \n \n"
                             + " - A save button exists to save all the details on your table \n \n"
                             + " - You may adjust text sizes, text colours, background colours and enable autosave in the properties window above the table \n \n"
-                            + " - Good luck!")
+                            + " - User input for submitting and removing rows exists if you prefer using the keyboard more. Press enter to submit or press backspace to delete (make sure a row is selected). \n \n"
+                            + " - Enjoy!")
 
 
         
@@ -327,6 +356,7 @@ def help_function(event): #Brief tutorial for new users
     
 def preferences_window(event):
 
+    global autosaved
     colours = ["black", "white", "red", "brown", "orange", "yellow", "green", "blue", "purple", "pink"]
 
     
@@ -370,6 +400,13 @@ def preferences_window(event):
     text_size.pack(side="right")
     text_size_frame.pack()
 
+    autosave_frame = tk.Frame(preferences)
+    tk.Label(autosave_frame, text = "Autosave: ").pack(side="left")
+    autosave_checkbox = tk.Checkbutton(autosave_frame, variable = autosaved, onvalue = True, offvalue = False)
+    autosave_checkbox.pack(side="right")
+    autosave_frame.pack(side="left")
+    
+
     submit_log = tk.Label(preferences, fg = 'red')
     submit_log.pack(side="bottom")
         
@@ -377,7 +414,7 @@ def preferences_window(event):
     submit_preferences.bind("<ButtonPress>", submit)
     submit_preferences.pack(side="right")
         
-
+    preferences.bind("<Return>", submit)
 
         
         
@@ -397,7 +434,7 @@ root = tk.Tk()
 root.title("Julie's Party Hire Store Details")
 root.geometry("1920x1280")
 
-
+#Title
 title_image = tk.PhotoImage(file="Title.png")
 title_image = title_image.zoom(10)
 title_image = title_image.subsample(15)
@@ -407,6 +444,7 @@ title = tk.Label(root, image=title_image)
 title.pack()
 title.place(x=0, y=20)
 
+#Name
 name_frame = tk.Frame(root)
 
 name_warning = tk.Label(name_frame, fg = 'red')
@@ -422,6 +460,8 @@ name_box.pack(side="right")
 name_frame.pack(side="left")
 name_frame.place(x=30, y=130)
 
+
+#Number of items
 number_items_frame = tk.Frame(root)
 
 number_of_items_warning = tk.Label(number_items_frame, fg = 'red')
@@ -438,6 +478,8 @@ number_of_items_box.pack(side="right")
 number_items_frame.pack(side="left")
 number_items_frame.place(x=30, y=230)
 
+
+#Items
 items_frame = tk.Frame(root)
 
 items_label = tk.Label(items_frame, text = "Item: ", font = 50)
@@ -449,6 +491,8 @@ items.pack(side="right")
 items_frame.pack(side="left")
 items_frame.place(x=30, y=330)
 
+
+#Receipt
 receipt_frame = tk.Frame(root)
 
 receipt_warning = tk.Label(receipt_frame, fg = 'red')
@@ -534,7 +578,8 @@ table.heading('Name', text = "Full Name")
 table.heading('Receipt Number', text = "Receipt Number")
 table.heading('Item', text = "Item")
 table.heading('Number Of Items', text = "Number Of Items")
-table.bind('p', edit_row)
+
+
 
 table.pack()
 
@@ -550,6 +595,12 @@ frame_table.place(x=600,y=100)
 
 
 load_details()
+
+#User input
+
+root.bind('<Return>', add_to_table) #Enter on windows
+root.bind('<BackSpace>', remove_row)
+
 
 root.mainloop()
 
