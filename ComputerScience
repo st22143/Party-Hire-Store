@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import json
+
 
 
 #Predefined variables
@@ -8,7 +10,7 @@ import json
 row_number = 0
 details = []
 saved = True
-pop_up_on = False
+
 
 #All functions for buttons and usability are below
 
@@ -41,14 +43,9 @@ def save_details(event): #This function will be called when the save button is c
         save_log.configure(text = "Saved", fg='black')
 
 
-def pop_up(title, text, size): #There may be a lot of pop up windows so it would be cleaner to keep it as a function
+def pop_up(title, text): #There may be a lot of pop up windows so it would be cleaner to keep it as a function
     
-    pop_up = tk.Toplevel(root)
-    pop_up.geometry(size)
-    
-    pop_up.title(title)
-    tk.Label(pop_up, text = str(text)).pack()
-
+    messagebox.showerror(title = title, message = text)
 
 
 
@@ -59,6 +56,11 @@ def number_checker(number):
         
         if i.isnumeric():
             
+            return True
+        
+def length_checker(subject):
+    for i in subject:
+        if len(i.strip()) == 0:
             return True
     
 
@@ -154,7 +156,7 @@ def add_to_table(event):
             table.insert(parent='', index = row_number, values=details[row_number])
             row_number+=1
             saved = False
-            save_log.configure(text = "Unsaved", fg = 'red')
+            save_log.configure(text = "\n Unsaved \n", fg = 'red')
         
         
 
@@ -192,7 +194,7 @@ def remove_row(event):
 
     row_number -= 1
     saved = False
-    save_log.configure(text = "Unsaved", fg = 'red')
+    save_log.configure(text = "\n Unsaved \n", fg = 'red')
 
 #Clears table
 def clear_table(event):
@@ -207,7 +209,7 @@ def clear_table(event):
     for i in table_row_values:
         table.delete(i)
     saved = False
-    save_log.configure(text = "Unsaved", fg = 'red')
+    save_log.configure(text = "\n Unsaved \n", fg = 'red')
    
 
 
@@ -303,24 +305,14 @@ def edit_row(event):
             details[row[0]] = [row[0], name_box.get(), receipt_box.get(), items.get(), number_of_items_box.get()]
             table.item(selected_item, values=details[row[0]])
             saved = False
-            save_log.configure(text = "Unsaved", fg = 'red')
+            save_log.configure(text = "\n Unsaved \n", fg = 'red')
 
 
 
 def help_function(event): #Brief tutorial for new users
     
-    global pop_up_on
-
-    if pop_up_on == False:
-        help_window = tk.Tk()
-        help_window.title("Help")
-        help_window.geometry("1000x500")
-
-        help_title = tk.Label(help_window, text = "\n Tutorial: ", font = 25)
-        help_title.pack()
-
-        help_message = tk.Label(help_window, 
-                            text = 
+    pop_up(title = "Tutorial", 
+                            text = "\n Tutorial: \n"
                             "\n - Enter the necessary details (name, item, number of items and receipt number) in the text boxes to your left. \n \n"
                             + " - Warnings will show up if invalid entries or potential mistakes occur. \n \n" 
                             + " - There are buttons below the text boxes. You will be able submit details to the table on your right. \n \n"
@@ -328,52 +320,62 @@ def help_function(event): #Brief tutorial for new users
                             + " - A save button exists to save all the details on your table \n \n"
                             + " - You may adjust text sizes, text colours, background colours and enable autosave in the properties window above the table \n \n"
                             + " - Good luck!")
-        help_message.pack()
 
-        help_window.mainloop()
 
-        pop_up_on = True
+        
 
     
 def preferences_window(event):
 
-    global pop_up_on
     colours = ["black", "white", "red", "brown", "orange", "yellow", "green", "blue", "purple", "pink"]
 
     
 
     def submit(event):
-        name_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
-        items_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
-        number_of_items_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
-        receipt_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+        
+        for i in colours:
+            if text_colour.get() != i or text_background != i:
+                submit_log.config(text = "You haven't picked valid inputs")
+            
+        if length_checker([text_colour.get(), text_background.get(), text_size.get()]):
+            submit_log.config(text = "Some of your texts are empty") 
+        
+        else:
+            name_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+            items_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+            number_of_items_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+            receipt_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
+            submit_log.config(text = " ")
     
-    if pop_up_on == False:
 
-        preferences = tk.Tk()
-        preferences.title("Preferences")
+
+    preferences = tk.Tk()
+    preferences.title("Preferences")
         
-        text_colour_frame = tk.Frame(preferences)
-        tk.Label(text_colour_frame, text = "Text colour").pack(side="left")
-        text_colour = ttk.Combobox(text_colour_frame, values = colours)
-        text_colour.pack(side="right")
-        text_colour_frame.pack()
+    text_colour_frame = tk.Frame(preferences)
+    tk.Label(text_colour_frame, text = "Text colour").pack(side="left")
+    text_colour = ttk.Combobox(text_colour_frame, values = colours)
+    text_colour.pack(side="right")
+    text_colour_frame.pack()
 
-        text_background_frame = tk.Frame(preferences)
-        tk.Label(text_background_frame, text = "Text background").pack(side="left")
-        text_background = ttk.Combobox(text_background_frame, values = colours)
-        text_background.pack(side="right")
-        text_background_frame.pack()
+    text_background_frame = tk.Frame(preferences)
+    tk.Label(text_background_frame, text = "Text background").pack(side="left")
+    text_background = ttk.Combobox(text_background_frame, values = colours)
+    text_background.pack(side="right")
+    text_background_frame.pack()
 
-        text_size_frame = tk.Frame(preferences)
-        tk.Label(text_size_frame, text = "Text size").pack(side="left")
-        text_size = tk.Entry(text_size_frame)
-        text_size.pack(side="right")
-        text_size_frame.pack()
+    text_size_frame = tk.Frame(preferences)
+    tk.Label(text_size_frame, text = "Text size").pack(side="left")
+    text_size = tk.Entry(text_size_frame)
+    text_size.pack(side="right")
+    text_size_frame.pack()
+
+    submit_log = tk.Label(preferences, fg = 'red')
+    submit_log.pack(side="bottom")
         
-        submit_preferences = tk.Button(preferences, text = "Submit")
-        submit_preferences.bind("<ButtonPress>", submit)
-        submit_preferences.pack(side="right")
+    submit_preferences = tk.Button(preferences, text = "Submit")
+    submit_preferences.bind("<ButtonPress>", submit)
+    submit_preferences.pack(side="right")
         
 
 
@@ -387,7 +389,7 @@ def close_window(): #Exit button
         root.destroy()
     
     if saved == False:
-        pop_up("Warning!", "You have a few unsaved changes", "250x30")
+        pop_up("Warning!", "You have a few unsaved changes")
 
 #All the tkinter labels, entries, treeviews, buttons and more are below
 
@@ -490,15 +492,15 @@ clear.bind("<ButtonPress>", clear_table)
 clear.pack()
 clear.place(x = 310, y = 525)
 
-#Frame for important widgets
-
-
+#Frame for the table
 
 frame_table = tk.Frame(root)
 
+#Frame for important buttons/widgets
+
 important = tk.Frame(frame_table)
 
-save_log = tk.Label (important, text = "\n Saved")
+save_log = tk.Label (important, text = "\n Saved \n")
 save_log.pack(side='bottom')
 
 help_button = tk.Button(important, text = "Help", font = ("Arial", 10, "bold"))
@@ -514,6 +516,7 @@ preferences_button.pack()
 
 
 important.pack(side="top")
+
 #Tkinter scrollbar
 table_scrollbar = ttk.Scrollbar(frame_table)
 table_scrollbar.pack(side="right", fill = 'y')
