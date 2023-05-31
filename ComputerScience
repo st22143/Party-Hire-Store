@@ -9,7 +9,9 @@ import json
 row_number = 0
 details = []
 saved = True
-autosaved = False
+
+
+
 
 
 #All functions for buttons and usability are below
@@ -17,6 +19,8 @@ autosaved = False
 def load_details(): #JSON will be used to store data externally 
 
     global row_number, details
+
+    help_function()
 
     with open('mydata.json', 'r') as json_file:
 
@@ -73,6 +77,7 @@ def add_to_table(event):
     item = False
     receipt = False
 
+    
     
 
     #Checks if receipt is valid    
@@ -160,13 +165,9 @@ def add_to_table(event):
             table.insert(parent='', index = row_number, values=details[row_number])
             row_number+=1
             
-            if autosaved == True:
-                saved = True
-                save_details()
-            
-            else:
-                saved = False
-                save_log.configure(text = "\n Unsaved \n", fg = 'red')
+
+            saved = False
+            save_log.configure(text = "\n Unsaved \n", fg = 'red')
         
         
 
@@ -204,13 +205,9 @@ def remove_row(event):
 
     row_number -= 1
     
-    if autosaved == True:
-        saved = True
-        save_details()
-            
-    else:
-        saved = False
-        save_log.configure(text = "\n Unsaved \n", fg = 'red')
+   
+    saved = False
+    save_log.configure(text = "\n Unsaved \n", fg = 'red')
 
 #Clears table
 def clear_table(event):
@@ -225,13 +222,9 @@ def clear_table(event):
     for i in table_row_values:
         table.delete(i)
     
-    if autosaved == True:
-        saved = True
-        save_details()
-            
-    else:
-        saved = False
-        save_log.configure(text = "\n Unsaved \n", fg = 'red')
+
+    saved = False
+    save_log.configure(text = "\n Unsaved \n", fg = 'red')
    
 
 
@@ -327,17 +320,13 @@ def edit_row(event):
             details[row[0]] = [row[0], name_box.get(), receipt_box.get(), items.get(), number_of_items_box.get()]
             table.item(selected_item, values=details[row[0]])
             
-            if autosaved == True:
-                saved = True
-                save_details()
-            
-            else:
-                saved = False
-                save_log.configure(text = "\n Unsaved \n", fg = 'red')
+ 
+            saved = False
+            save_log.configure(text = "\n Unsaved \n", fg = 'red')
 
 
 
-def help_function(event): #Brief tutorial for new users
+def help_function(*event): #Brief tutorial for new users
     
     pop_up(title = "Tutorial", 
                             text = "\n Tutorial: \n"
@@ -346,26 +335,31 @@ def help_function(event): #Brief tutorial for new users
                             + " - There are buttons below the text boxes. You will be able submit details to the table on your right. \n \n"
                             + " - If you wish to edit or delete rows on table then you must CLICK on the row you want to edit or delete before clicking the button. \n \n"
                             + " - A save button exists to save all the details on your table \n \n"
-                            + " - You may adjust text sizes, text colours, background colours and enable autosave in the properties window above the table \n \n"
+                            + " - You may adjust text sizes, text colours and background colours \n \n"
                             + " - User input for submitting and removing rows exists if you prefer using the keyboard more. Press enter to submit or press backspace to delete (make sure a row is selected). \n \n"
                             + " - Enjoy!")
 
 
         
 
-    
+#A separate window for the user to creatr adjustments
 def preferences_window(event):
 
-    global autosaved
+    #A list of colours for the comboboxes
     colours = ["black", "white", "red", "brown", "orange", "yellow", "green", "blue", "purple", "pink"]
 
     
-
+    #Submit function
     def submit(event):
-        
-        for i in colours:
+
+        for i in colours: 
+
             if text_colour.get() != i or text_background != i:
                 submit_log.config(text = "You haven't picked valid inputs")
+            
+                
+
+
             
         if length_checker([text_colour.get(), text_background.get(), text_size.get()]):
             submit_log.config(text = "Some of your texts are empty") 
@@ -377,43 +371,46 @@ def preferences_window(event):
             receipt_label.config(font = (int(text_size.get())), bg = text_background.get(), fg = text_colour.get())
             submit_log.config(text = " ")
     
+        
+
+
 
 
     preferences = tk.Tk()
     preferences.title("Preferences")
         
+    #Text colour widgets
     text_colour_frame = tk.Frame(preferences)
     tk.Label(text_colour_frame, text = "Text colour").pack(side="left")
     text_colour = ttk.Combobox(text_colour_frame, values = colours)
     text_colour.pack(side="right")
     text_colour_frame.pack()
 
+    #Text background widgets
     text_background_frame = tk.Frame(preferences)
     tk.Label(text_background_frame, text = "Text background").pack(side="left")
     text_background = ttk.Combobox(text_background_frame, values = colours)
     text_background.pack(side="right")
     text_background_frame.pack()
 
+    #Text size widgets
     text_size_frame = tk.Frame(preferences)
     tk.Label(text_size_frame, text = "Text size").pack(side="left")
     text_size = tk.Entry(text_size_frame)
     text_size.pack(side="right")
     text_size_frame.pack()
 
-    autosave_frame = tk.Frame(preferences)
-    tk.Label(autosave_frame, text = "Autosave: ").pack(side="left")
-    autosave_checkbox = tk.Checkbutton(autosave_frame, variable = autosaved, onvalue = True, offvalue = False)
-    autosave_checkbox.pack(side="right")
-    autosave_frame.pack(side="left")
-    
 
+    
+    #Message log incase of misuse
     submit_log = tk.Label(preferences, fg = 'red')
     submit_log.pack(side="bottom")
         
     submit_preferences = tk.Button(preferences, text = "Submit")
     submit_preferences.bind("<ButtonPress>", submit)
     submit_preferences.pack(side="right")
-        
+
+    #User input: Press enter to submit
     preferences.bind("<Return>", submit)
 
         
@@ -430,22 +427,24 @@ def close_window(): #Exit button
 
 #All the tkinter labels, entries, treeviews, buttons and more are below
 
-root = tk.Tk()
-root.title("Julie's Party Hire Store Details")
-root.geometry("1920x1280")
+root = tk.Tk() #This is the window
+root.title("Julie's Party Hire Store Details") #Title of window
+root.attributes('-fullscreen', True) #Makes window full screen
+
 
 #Title
-title_image = tk.PhotoImage(file="Title.png")
-title_image = title_image.zoom(10)
-title_image = title_image.subsample(15)
+title_image = tk.PhotoImage(file="Title.png") #Gets reference of image
+title_image = title_image.zoom(10) #Adjusts size of image
+title_image = title_image.subsample(15) #Adjusts size of image
 
 
-title = tk.Label(root, image=title_image)
-title.pack()
-title.place(x=0, y=20)
+title = tk.Label(root, image=title_image) #Tkinter text label
+title.pack() #Adds label to window
+title.place(x=0, y=20) #Places label
+
 
 #Name
-name_frame = tk.Frame(root)
+name_frame = tk.Frame(root) #Makes widgets slightly more organized
 
 name_warning = tk.Label(name_frame, fg = 'red')
 name_warning.pack(side='bottom')
@@ -453,7 +452,7 @@ name_warning.pack(side='bottom')
 name_label = tk.Label(name_frame, text = "Full Name: ", font=25)
 name_label.pack(side="left")
 
-name_box = tk.Entry(name_frame, width=50)
+name_box = tk.Entry(name_frame, width=50) #User input can go in here
 name_box.pack(side="right")
 
 
@@ -485,7 +484,7 @@ items_frame = tk.Frame(root)
 items_label = tk.Label(items_frame, text = "Item: ", font = 50)
 items_label.pack(side="left")
 
-items = ttk.Combobox(items_frame, values = ["Party Hire Stuff", "Other stuff"])                                 
+items = ttk.Combobox(items_frame, values = ["Party Hire Stuff", "Other stuff"]) #Multiselect widget                             
 items.pack(side="right")
 
 items_frame.pack(side="left")
